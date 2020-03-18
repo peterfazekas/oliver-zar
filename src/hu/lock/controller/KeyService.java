@@ -1,7 +1,7 @@
 package hu.lock.controller;
 
 import hu.lock.model.domain.Key;
-import hu.lock.model.service.RandomKeyGenerator;
+import hu.lock.model.service.RandomKeyUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,13 +31,19 @@ public class KeyService {
 
     private Optional<Integer> getOptionalSameDigitKeyId() {
         return keys.stream()
-                .filter(i -> i.hasSameDigit())
-                .map(i -> i.getId())
+                .filter(Key::hasSameDigit)
+                .map(Key::getId)
                 .findFirst();
     }
 
     public String getGeneratedKey(String pattern) {
         int length = pattern.length();
-        return String.format("Egy %d hosszú kódszám: %s", length, RandomKeyGenerator.generateKey(length));
+        return String.format("Egy %d hosszú kódszám: %s", length, RandomKeyUtil.generateKey(length));
+    }
+
+    public List<String> getOpenResults(String pattern) {
+        return keys.stream()
+                .map(key -> key.openResult(pattern))
+                .collect(Collectors.toList());
     }
 }

@@ -6,26 +6,24 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class RandomKeyGenerator {
+public class RandomKeyUtil {
 
     private static final Random random = new Random();
 
     public static String generateKey(int length) {
-        String generatedKey = "";
+        StringBuilder generatedKey = new StringBuilder();
         List<Integer> numbers = new ArrayList<>(numbers());
-        for(int i = 0 ; i < length; i++) {
+        IntStream.range(0, length).forEach(i -> {
             int num = random.nextInt(numbers.size());
-            generatedKey += numbers.get(num);
+            generatedKey.append(numbers.get(num));
             numbers.remove(num);
-        }
-        return generatedKey;
+        });
+        return generatedKey.toString();
     }
 
     private static List<Integer> numbers() {
-        List<Integer> numbers = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            numbers.add(i);
-        }
-        return numbers;
+        return IntStream.range(0, 10)
+                .boxed()
+                .collect(Collectors.toList());
     }
 }
